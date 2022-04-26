@@ -7,7 +7,7 @@ const Services = () => {
     const [services, setServices] = useState([])
 
     useEffect(() => {
-        fetch('services.json')
+        fetch('http://localhost:5000/service')
             .then(res => res.json())
             .then(data => setServices(data))
     }, [])
@@ -15,11 +15,11 @@ const Services = () => {
     return (
         <div id='services' className='mt-5 container'>
             <div className="row">
-                <h1 className='services-title'>Our Services : {services.length}</h1>
+                <h1 className='services-title my-5'>Our Services : {services.length}</h1>
                 <div className="services-container">
                     {
                         services.map(service => <Service
-                            key={service.id}
+                            key={service._id}
                             service={service}
                         ></Service>)
                     }
