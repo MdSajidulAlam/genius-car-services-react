@@ -5,9 +5,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
 import Loading from '../../Shared/Loading/Loading';
 import SocialLogin from '../SocialLogin/SocialLogin';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PageTitle from '../../Shared/PageTitle/PageTitle';
+import axios from 'axios';
 
 const Login = () => {
     const emailRef = useRef('')
@@ -35,13 +36,16 @@ const Login = () => {
         errorElement = <p className='text-danger'>Error: {error?.message} </p>
     }
     if (user) {
-        navigate(from, { replace: true });
+        // navigate(from, { replace: true });
     }
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault()
         const email = emailRef.current.value
         const password = passwordRef.current.value
-        signInWithEmailAndPassword(email, password)
+        await signInWithEmailAndPassword(email, password)
+        const { data } = await axios.post('http://localhost:5000/login', { email })
+        localStorage.setItem('accessToken', data.accessToken);
+        navigate(from, { replace: true });
     }
 
     const resetPassword = async () => {
@@ -79,7 +83,7 @@ const Login = () => {
             <p className='mt-3'>Forget password?<button className='text-primary text-decoration-none btn btn-link' onClick={resetPassword}>Reset Password</button></p>
             {errorElement}
             <SocialLogin></SocialLogin>
-            <ToastContainer />
+
         </div>
     );
 };
